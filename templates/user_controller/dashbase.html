@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>iHype</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+
+<style>
+body{
+  background: black;
+}
+h1{
+  color: white;
+}
+h2{
+  color:red;
+}
+</style>
+
+  </head>
+  <body>
+<h1>iHype.com</h1>
+    {%if success %}
+    <span style="color: coral;"> Password Reset  -- {{message}}. </span> 
+    
+    <br><br>
+
+    <form method="POST" id="myformid">
+      {% csrf_token %}
+<input id="token" name="token" placeholder="token" value="{{token}}"  hidden />
+<input id="uidb64" name="uidb64" placeholder="uidb64" value="{{uidb64}}" hidden/>
+<input id="password" name="password" type="password" placeholder="new password" required />
+<input id="confirmpassword" name="confirmpassword" type="password"  placeholder="confirm new password" required/>
+<input type="submit" value="Submit"/>
+<br></br>
+
+    </form>
+    <button onclick="showpassword()" style="color:black; background-color: wheat; border-radius: 3px; border-color: wheat;" onmouseover="this.style.cursor='pointer';">show/hide password</button>   
+    {% endif %}
+
+    {% if error %}
+    <span style="color: coral;">{{error}}</span>
+      
+    {% endif %}
+    <br></br>
+
+<h2 id="cont"></h2>
+  <script>
+
+const formdiv = document.getElementById("myformid")
+const password = document.getElementById("password")
+const confirmpassword = document.getElementById("confirmpassword")
+const token= document.getElementById("token")
+const uidb64= document.getElementById("uidb64")
+let cont= document.getElementById("cont")
+
+
+
+const sendy =()=>{
+
+  const API_ENDPOINT = window.location.origin +"/user/password-reset-complete"//window.location.pathname;
+  console.log("APiEndpoint::::", API_ENDPOINT)
+  const request = new XMLHttpRequest();
+   const responseType = "json"
+   request.responseType = responseType
+      const formData = new  FormData();
+
+   request.open("PATCH", API_ENDPOINT, true);
+   const csrftoken = getCookie('csrftoken');
+ request.setRequestHeader("X-CSRFToken", csrftoken);
+ 
+  request.onload = function() {
+       const res = request.response
+       if(res){
+        console.log("res:::",res)
+       for (var g in res){
+         console.log(res[g])
+         cont.innerHTML  = res[g] + "!!!"
+
+          }
+       }else{
+        cont.innerHTML = "Network error, check your internet connection and try again!!!"
+
+       }
+     
+
+        // const reserr = res.error
+        // if (reserr){
+        //   cont.innerHTML  = res.errors.error
+
+        // }else{
+        	
+        // 	const message = res.message
+        // 	alert(message)
+        //   cont.innerHTML  = message
+        // }
+  }
+  request.onerror = function(e) {
+    console.log("onerror:::",e)
+    cont.innerHTML = "Network error, check your internet connection and try again!!!"
+  }
+  formData.append("password", password.value);
+  formData.append("token", token.value);
+  formData.append("uidb64", uidb64.value);
+
+
+  request.send(formData);
+
+}
+
+formdiv.addEventListener("submit", event => {
+event.preventDefault();
+console.log("sendy:::::",password.value, token.value, uidb64.value)
+if(password.value !== confirmpassword.value){
+  cont.innerHTML= "Passwords dont match!!!"
+  return
+}else{
+  sendy()
+}
+
+})
+
+let check = true;
+const showpassword =()=>{
+  if(check){
+    password.type ="text"
+    confirmpassword.type = "text"
+    check = false
+  }else{
+    password.type ="password"
+    confirmpassword.type = "password"
+    check = true
+  }
+}
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+  </script>
+ 
+  </body>
+</html>
