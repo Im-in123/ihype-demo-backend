@@ -5,20 +5,26 @@ from rest_framework.generics import ListAPIView
 from django.db.models import Count, Q
 from user_controller.models import CustomUser
 from videosite.custom_methods import IsAuthenticatedCustom
-
+from user_controller.views import decodeJWT
 
 # from rest_framework.pagination import PageNumberPagination
 
 # class PaginationInterfae(PageNumberPagination):
 #     page_size =20
 
-
+from random import shuffle
 class MovieView(ModelViewSet):
     queryset = Movie.objects.all()
     permission_classes = (IsAuthenticatedCustom,)
     # pagination_class = PaginationInterfae
     serializer_class = MovieSerializer
     lookup_field = "slug"
+
+    # def get_queryset(self):
+    #     my_list = list(self.queryset)
+    #     shuffle(my_list) 
+    #     return my_list
+
 
 
 class TagView(ModelViewSet):
@@ -28,39 +34,20 @@ class TagView(ModelViewSet):
 class WatchlistView(ModelViewSet):
     queryset = Watchlist.objects.all()
     serializer_class = WatchListSerializer
+    permission_classes = (IsAuthenticatedCustom,)
+
 
     def get_queryset(self):
         try:
             query = self.request.query_params.dict()
             keyword = query.get("keyword", None)
-            user = CustomUser.objects.get(id= int(keyword))
+            user = decodeJWT(keyword)
+            # user = CustomUser.objects.get(id= int(keyword))
             query_data = self.queryset.filter(user =user)
             return query_data
         except Exception as e:
+            print("watchlist viewset::::",e)
             return None
-
- 
-# class VideoMovies(ListAPIView):
-#     queryset= Movies.objects.all()
-#     serializer_class= VideoSerializer
-
-#     # def get_queryset(self):
-#     #     blogs =self.queryset.annotate(comment_count=Count("blog_comments")).order_by("-comment_count")[:5]
-#     #     return blogs
-
-# class VideoSeries(ListAPIView):
-#     queryset= Movie.objects.all().filter()
-#     serializer_class= VideoSerializer
-
-    # def get_queryset(self,  *args, **kwargs): 
-    #     try:
-    #         video_id = kwargs.get("video_id")
-    #         video_tags = self.queryset.get(id = video_id).tags.all()
-    #     except Exception as e:
-    #         print(e,"here")
-    #         return []
-    #     videos = self.queryset.filter(tags__id__in=[tag.id for tag in video_tags]).exclude(id=video_id)
-    #     return videos
 
 class SeriesView(ModelViewSet):
     queryset = Series.objects.all()
@@ -72,6 +59,8 @@ class SeriesView(ModelViewSet):
 class VideoView(ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticatedCustom,)
+
    
 
     def get_queryset(self):

@@ -33,12 +33,23 @@ class Video(models.Model):
     title = models.CharField(max_length= 255, blank=True)
     # slug= models.SlugField(default = "", editable = False, max_length=255)
     videotype= models.CharField(choices= VIDEO_TYPE, max_length=11)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
 
+    class Meta:
+        ordering = ("created_at",)
 
     def __str__(self):
         return  f"Video Type: {self.videotype} {self.title}"       
 
 class Movie(models.Model):
+
+    def get_tag():
+        try:
+            t  = Tag.objects.get(title = "Recommended")
+        except:
+            t = Tag.objects.create(title="Recommended")
+        return str(t)
     author = models.ForeignKey("user_controller.CustomUser", related_name="movie_author", on_delete= models.CASCADE)
     title = models.CharField(max_length= 255, unique=True)
     slug= models.SlugField(default = "", editable = False, max_length=255)
@@ -47,17 +58,17 @@ class Movie(models.Model):
     background_small_screen = models.ImageField(upload_to="movie_background_covers_smallscreen",default='default.jpg')
     video = models.FileField(upload_to='movies_uploaded',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
     trailer= models.FileField(upload_to='movie_trailer',null=True, blank=True, validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
+    subtitle_file = models.FileField(upload_to="movie_subtitles", null = True, blank= True)
     subtitle = models.CharField(max_length= 255, null=True, blank=True)
     description = models.CharField(max_length= 700, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name="movie_tags", blank=True)
+    tags = models.ManyToManyField(Tag, related_name="movie_tags", default=get_tag())
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     core_type= models.CharField(choices= VIDEO_TYPE, max_length=11)
 
 
-
     class Meta:
-        ordering = ("-created_at",)
+        ordering = ("created_at",)
 
     def __str__(self):
         return  f"{self.author.username} - {self.title}"
@@ -119,6 +130,7 @@ class Episode(models.Model):
     cover = models.ImageField( upload_to="episode_covers", default='default.jpg')
     video = models.FileField(upload_to='episodes_uploaded',null=True, blank=True, \
                  validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
+    subtitle_file = models.FileField(upload_to="episode_subtitles", null = True, blank= True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 

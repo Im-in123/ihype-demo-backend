@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "user_controller.CustomUser"
 
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'content-type',
@@ -151,8 +151,27 @@ CORS_ALLOW_HEADERS = (
     'content-disposition'
 )
 CORS_ALLOW_CREDENTIALS = False
-CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')
+CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'OPTIONS') # 'DELETE',
+CORS_ORIGIN_WHITELIST=[
+    'http://localhost:3000',
+    'http://localhost:8000',
+    # 'http://localhost:8080',
+    'http://192.168.43.77:8000',
+    'http://192.168.43.77:3000'
+
+
+
+]
+# CORS_ALLOWED_ORIGINS = [
+#     "https://example.com",
+#     "https://sub.example.com",
+#     "http://localhost:8080",
+#     "http://127.0.0.1:9000"
+# ]
 #i have to double check the cors settings here , before production.
+
+
+
 # REST_FRAMEWORK={
 #     'DEFAULT_RENDER_CLASSES':[
 #         'rest_framework.renderers.AdminRenderer'
@@ -165,3 +184,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "rudyelisha77@gmail.com" # os.environ.get('email')
 EMAIL_HOST_PASSWORD = "sandfreez" #os.environ.get('password')
+
+REST_FRAMEWORK ={
+    "DEFAULT_PAGINATION_CLASS":"rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE":10
+}
