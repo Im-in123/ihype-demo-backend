@@ -1,1 +1,1 @@
-﻿web: gunicorn typr.wsgi --log-file -
+﻿web: gunicorn videosite.wsgi --log-file -
