@@ -44,12 +44,12 @@ class Video(models.Model):
 
 class Movie(models.Model):
 
-    def get_tag():
-        try:
-            t  = Tag.objects.get(title = "Recommended")
-        except:
-            t = Tag.objects.create(title="Recommended")
-        return str(t)
+    # def get_tag():
+    #     try:
+    #         t  = Tag.objects.get(title = "Recommended")
+    #     except:
+    #         t = Tag.objects.create(title="Recommended")
+    #     return str(t)
     author = models.ForeignKey("user_controller.CustomUser", related_name="movie_author", on_delete= models.CASCADE)
     title = models.CharField(max_length= 255, unique=True)
     slug= models.SlugField(default = "", editable = False, max_length=255)
@@ -61,7 +61,8 @@ class Movie(models.Model):
     subtitle_file = models.FileField(upload_to="movie_subtitles", null = True, blank= True)
     subtitle = models.CharField(max_length= 255, null=True, blank=True)
     description = models.CharField(max_length= 700, null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name="movie_tags", default=get_tag())
+    # tags = models.ManyToManyField(Tag, related_name="movie_tags", default=get_tag())
+    tags = models.ManyToManyField(Tag, related_name="movie_tags", blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     core_type= models.CharField(choices= VIDEO_TYPE, max_length=11)
