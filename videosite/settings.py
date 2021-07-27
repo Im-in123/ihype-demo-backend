@@ -161,7 +161,7 @@ CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'OPTIONS') # 'DELETE',
 
 
 
-]
+# ]
 # CORS_ALLOWED_ORIGINS = [
 #     "https://example.com",
 #     "https://sub.example.com",
