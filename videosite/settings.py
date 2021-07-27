@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
-
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "user_controller.CustomUser"
 
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_HEADERS = (
     'x-requested-with',
     'content-type',
@@ -152,12 +152,12 @@ CORS_ALLOW_HEADERS = (
 )
 CORS_ALLOW_CREDENTIALS = False
 CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'OPTIONS') # 'DELETE',
-CORS_ORIGIN_WHITELIST=[
-    'http://localhost:3000',
-    'http://localhost:8000',
-    # 'http://localhost:8080',
-    'http://192.168.43.77:8000',
-    'http://192.168.43.77:3000'
+# CORS_ORIGIN_WHITELIST=[
+#     'http://localhost:3000',
+#     'http://localhost:8000',
+#     # 'http://localhost:8080',
+#     'http://192.168.43.77:8000',
+#     'http://192.168.43.77:3000'
 
 
 
@@ -182,10 +182,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "rudyelisha77@gmail.com" # os.environ.get('email')
-EMAIL_HOST_PASSWORD = "sandfreez" #os.environ.get('password')
+EMAIL_HOST_USER =  os.environ.get('email')
+EMAIL_HOST_PASSWORD = os.environ.get('password')
 
 REST_FRAMEWORK ={
     "DEFAULT_PAGINATION_CLASS":"rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE":10
 }
+
+django_heroku.settings(locals())
