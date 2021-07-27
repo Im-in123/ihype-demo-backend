@@ -158,7 +158,7 @@ CORS_ORIGIN_WHITELIST=[
     # 'http://localhost:8080',
     'http://192.168.43.77:8000',
     'http://192.168.43.77:3000',
-    # 'https://ihype.netlify.app'
+    'https://ihype.netlify.app'
 
 ]
 # CORS_ALLOWED_ORIGINS = [
