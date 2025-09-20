@@ -1,4 +1,4 @@
-name: deploy GinAndGormX
+name: deploy SimplePortofolio
 
 on:
   push:
